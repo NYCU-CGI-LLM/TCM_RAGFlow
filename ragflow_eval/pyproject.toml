@@ -1,0 +1,14 @@
+[project]
+name = "ragflow-eval"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "ragas>=0.3.7",
+    "ragflow-sdk",
+    "ruamel-yaml>=0.18.16",
+]
+
+[tool.uv.sources]
+ragflow-sdk = { path = "../ragflow/sdk/python", editable = true }

@@ -1,0 +1,12 @@
+[project]
+name = "tcmembeddingmodel"
+version = "0.1.0"
+description = "Fine-tuning Qwen3-Embedding model for Traditional Chinese Medicine (TCM) domain"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "jieba>=0.42.1",
+    "ms-swift>=3.7.3",
+    "rank-bm25>=0.2.2",
+    "vllm==0.10.2",
+]

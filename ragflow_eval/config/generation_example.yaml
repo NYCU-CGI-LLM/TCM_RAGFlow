@@ -1,0 +1,33 @@
+# Example configuration for generation-focused evaluation
+# Uses a chat to retrieve contexts and evaluate both retrieval and generation quality.
+
+generation:
+  api_key: "ragflow-YOUR_API_KEY_HERE"
+
+  # Optional overrides (defaults fall back to chat configuration)
+  # base_url: "http://localhost:9380"
+  
+  # Identify the chat to use (provide either chat_name or chat_id)
+  chat_name: "YOUR_CHAT_NAME_ID_HERE"
+  # chat_id: "YOUR_CHAT_ID_HERE"
+
+  # Number of chunks to retrieve (default: 5)
+  size: 5
+  
+  
+  # Retrieval metrics are still evaluated using the chat's retrieved doc IDs
+  metrics:
+    - recall
+    - precision
+  k_values:
+    - 1
+    - 5
+    - 10
+
+dataset:
+  path: "./dataset/tcm_sd_test_rc_five_updated.json"
+  limit: 100  # Limit number of samples used for evaluation (null = all)
+  # Ensure each sample contains expected answers for generation scoring
+
+output:
+  results_path: "results/generation_evaluation.json"

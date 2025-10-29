@@ -1,0 +1,42 @@
+include:
+  - ./ragflow/docker/docker-compose.yml
+
+services:
+
+  ragflow_eval:
+    build:
+      context: .
+      dockerfile: ragflow_eval/Dockerfile
+    container_name: ragflow-eval
+    command: ["sleep", "infinity"]
+    env_file: .env
+    environment:
+      - TZ=${TIMEZONE}
+    volumes:
+      - ./ragflow_eval:/workspace/ragflow_eval
+      - ./ragflow/sdk/python:/workspace/ragflow/sdk/python:ro
+    networks:
+      - ragflow
+    restart: unless-stopped
+
+  tcm_embedding:
+    build:
+      context: .
+      dockerfile: TCMEmbeddingModel/Dockerfile
+    container_name: tcm-embedding
+    command: ["sleep", "infinity"]
+    env_file: .env
+    environment:
+      - TZ=${TIMEZONE}
+    volumes:
+      - ./TCMEmbeddingModel:/workspace/TCMEmbeddingModel
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    networks:
+      - ragflow
+    restart: unless-stopped

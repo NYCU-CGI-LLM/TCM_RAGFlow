@@ -1,0 +1,32 @@
+# Minimal configuration example for RAGFlow evaluation
+# This is a simple config with only essential parameters
+
+retrieval:
+  api_key: "ragflow-AxZDAyZGQyYjRmNTExZjBiYzYwMDI0Mm"
+
+  # dataset_id: "6ba750d6a34e11f0a29a37d227f1c0af"
+  dataset_name: "simple_rag_qwen"
+  size: 100  # Number of chunks to retrieve
+
+  # Optional overrides (defaults fall back to chat configuration)
+  base_url: "http://ragflow:9380"
+
+  metrics:
+    - recall  # Calculate only recall metrics for efficiency
+
+  k_values:
+    - 5  
+    - 10
+    - 20
+    - 50
+    - 100
+
+dataset:
+  path: "./dataset/tcm_sd_test_rc_direct.json"
+  limit: 100
+
+output:
+  results_path: "results/evaluation_retrieval_600m_v3.json"
+
+execution:
+  concurrency: 4

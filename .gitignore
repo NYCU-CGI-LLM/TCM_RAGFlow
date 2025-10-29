@@ -1,0 +1,54 @@
+# Global Python ignores
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+.python-version
+
+# Node / frontend artifacts
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Project: ragflow
+ragflow/.venv/
+ragflow/logs/
+ragflow/flask_session/
+ragflow/history_data_agent/**/logs/
+ragflow/rag/res/deepdoc/.cache/
+ragflow/rag/res/deepdoc/.cache/**
+ragflow/web/node_modules/
+ragflow/web/dist/
+ragflow/web/.umi*/
+
+# Project: RAGFlow Eval
+ragflow_eval/.venv/
+ragflow_eval/__pycache__/
+ragflow_eval/dataset/
+ragflow_eval/results/
+
+# Project: TCMEmbeddingModel
+TCMEmbeddingModel/.venv/
+TCMEmbeddingModel/data/
+TCMEmbeddingModel/output/
+
+# OS / tooling
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Temporary or backup files
+*.swp
+*.swo
+*.bak
+.nfs*
+

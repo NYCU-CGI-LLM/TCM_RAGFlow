@@ -1,0 +1,39 @@
+# Example configuration for RAGFlow RAGAS retrieval evaluation
+# For generation-focused evaluation, see generation_example.yaml
+
+retrieval:
+  api_key: "ragflow-YOUR_API_KEY_HERE"
+
+  # Base URL (optional, defaults to http://localhost:9380)
+  # base_url: "http://localhost:9380"
+  
+  # Identify the chat to use (provide either dataset_name or datset_id)
+  dataset_name: "My Knowledge Base"
+  # dataset_id: "YOUR_DATASET_ID_HERE"
+  
+  # Number of chunks to retrieve (default: 5)
+  size: 5
+  
+  metrics:
+    - recall
+    - precision
+
+  # K values for @K metrics (optional, default: [1, 3, 5, 10])
+  # Now using RAGAS metrics: context_precision@K, context_recall@K
+  k_values:
+    - 1
+    - 3
+    - 5
+    - 10
+
+dataset:
+  # Path to evaluation dataset JSON file
+  # For generation evaluation, dataset should include 'expected_answer' or 'ground_truth' field
+  path: "./dataset/tcm_sd_test_rc_direct.json"
+  
+  # Limit number of samples to evaluate (null = evaluate all)
+  limit: null
+
+output:
+  # Path where evaluation results will be saved
+  results_path: "results/evaluation_results.json"
