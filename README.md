@@ -10,6 +10,11 @@
 
 ## Running the Project
 
+Copy the .env for ragflow
+```bash
+cp .env ragflow/docker/.env
+```
+
 There are two supported workflows. Pick the one that matches how much you want to run on the host machine versus in Docker.
 
 ### Option A — Full container stack
