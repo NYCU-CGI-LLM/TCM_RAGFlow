@@ -66,7 +66,7 @@ from rag.app import laws, paper, presentation, manual, qa, table, book, resume, 
 from rag.nlp import search, rag_tokenizer
 from rag.raptor import RecursiveAbstractiveProcessing4TreeOrganizedRetrieval as Raptor
 from rag.settings import DOC_MAXIMUM_SIZE, DOC_BULK_SIZE, EMBEDDING_BATCH_SIZE, SVR_CONSUMER_GROUP_NAME, get_svr_queue_name, get_svr_queue_names, print_rag_settings, TAG_FLD, PAGERANK_FLD
-from rag.utils import num_tokens_from_string, truncate
+from rag.utils import num_tokens_from_string
 from rag.utils.redis_conn import REDIS_CONN, RedisDistributedLock
 from rag.utils.storage_factory import STORAGE_IMPL
 from graphrag.utils import chat_limiter
@@ -430,9 +430,8 @@ def init_kb(row, vector_size: int):
 async def embedding(docs, mdl, parser_config=None, callback=None):
     if parser_config is None:
         parser_config = {}
-    tts, cnts = [], []
+    cnts = []
     for d in docs:
-        tts.append(d.get("docnm_kwd", "Title"))
         c = "\n".join(d.get("question_kwd", []))
         if not c:
             c = d["content_with_weight"]
@@ -442,15 +441,10 @@ async def embedding(docs, mdl, parser_config=None, callback=None):
         cnts.append(c)
 
     tk_count = 0
-    if len(tts) == len(cnts):
-        vts, c = await trio.to_thread.run_sync(lambda: mdl.encode(tts[0: 1]))
-        tts = np.concatenate([vts for _ in range(len(tts))], axis=0)
-        tk_count += c
-
     @timeout(5)
     def batch_encode(txts):
         nonlocal mdl
-        return mdl.encode([truncate(c, mdl.max_length-10) for c in txts])
+        return mdl.encode(txts)
 
     cnts_ = np.array([])
     for i in range(0, len(cnts), EMBEDDING_BATCH_SIZE):
@@ -463,12 +457,7 @@ async def embedding(docs, mdl, parser_config=None, callback=None):
         tk_count += c
         callback(prog=0.7 + 0.2 * (i + 1) / len(cnts), msg="")
     cnts = cnts_
-    filename_embd_weight = parser_config.get("filename_embd_weight", 0.1) # due to the db support none value
-    if not filename_embd_weight:
-        filename_embd_weight = 0.1
-    title_w = float(filename_embd_weight)
-    vects = (title_w * tts + (1 - title_w) *
-             cnts) if len(tts) == len(cnts) else cnts
+    vects = cnts
 
     assert len(vects) == len(docs)
     vector_size = 0

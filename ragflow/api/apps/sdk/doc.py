@@ -1108,9 +1108,10 @@ def add_chunk(tenant_id, dataset_id, document_id):
     d["doc_id"] = document_id
     embd_id = DocumentService.get_embd_id(document_id)
     embd_mdl = TenantLLMService.model_instance(tenant_id, LLMType.EMBEDDING.value, embd_id)
-    v, c = embd_mdl.encode([doc.name, req["content"] if not d["question_kwd"] else "\n".join(d["question_kwd"])])
-    v = 0.1 * v[0] + 0.9 * v[1]
-    d["q_%d_vec" % len(v)] = v.tolist()
+    content_for_embedding = req["content"] if not d["question_kwd"] else "\n".join(d["question_kwd"])
+    v, c = embd_mdl.encode([content_for_embedding])
+    vec = v[0]
+    d["q_%d_vec" % len(vec)] = vec.tolist()
     settings.docStoreConn.insert([d], search.index_name(tenant_id), dataset_id)
 
     DocumentService.increment_chunk_num(doc.id, doc.kb_id, c, 1, 0)
@@ -1302,9 +1303,10 @@ def update_chunk(tenant_id, dataset_id, document_id, chunk_id):
         q, a = rmPrefix(arr[0]), rmPrefix(arr[1])
         d = beAdoc(d, arr[0], arr[1], not any([rag_tokenizer.is_chinese(t) for t in q + a]))
 
-    v, c = embd_mdl.encode([doc.name, d["content_with_weight"] if not d.get("question_kwd") else "\n".join(d["question_kwd"])])
-    v = 0.1 * v[0] + 0.9 * v[1] if doc.parser_id != ParserType.QA else v[1]
-    d["q_%d_vec" % len(v)] = v.tolist()
+    content_for_embedding = d["content_with_weight"] if not d.get("question_kwd") else "\n".join(d["question_kwd"])
+    v, c = embd_mdl.encode([content_for_embedding])
+    vec = v[0]
+    d["q_%d_vec" % len(vec)] = vec.tolist()
     settings.docStoreConn.update({"id": chunk_id}, d, search.index_name(tenant_id), dataset_id)
     return get_result()
 

@@ -28,12 +28,17 @@ ragflow/rag/res/deepdoc/.cache/**
 ragflow/web/node_modules/
 ragflow/web/dist/
 ragflow/web/.umi*/
+# Ensure the dataset page source stays tracked
+!ragflow/web/src/pages/dataset/
+!ragflow/web/src/pages/dataset/**
 
 # Project: RAGFlow Eval
 ragflow_eval/.venv/
 ragflow_eval/__pycache__/
-ragflow_eval/dataset/
+# ragflow_eval/dataset/
 ragflow_eval/results/
+# !ragflow_eval/dataset/
+# !ragflow_eval/dataset/**
 
 # Project: TCMEmbeddingModel
 TCMEmbeddingModel/.venv/
@@ -51,4 +56,3 @@ Thumbs.db
 *.swo
 *.bak
 .nfs*
-
